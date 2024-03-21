@@ -16,7 +16,7 @@ public class Saal {
     @Transient
     private final int istekohtadeArv = 135;
     @Transient
-    private final int dridadeArv = 9;
+    private final int ridadeArv = 9;
     @OneToMany(mappedBy = "saal", cascade = CascadeType.ALL)
     private final List<Istekoht> istekohad = new ArrayList<>();
     public Saal( String nimi) {
@@ -26,6 +26,10 @@ public class Saal {
     }
 
     public Saal() {
+
+    }
+
+    private List<Istekoht> soovitaKohad(int kohtadeArv){
 
     }
 
@@ -79,6 +83,10 @@ public class Saal {
 
     public void setNimi(String nimi) {
         this.nimi = nimi;
+    }
+
+    public List<Istekoht> getIstekohad() {
+        return istekohad;
     }
 }
 

@@ -15,6 +15,7 @@ public class Film {
     private String kestus;
 
     private String zanr;
+    private String vanusepiirang;
 
     @Transient
     private String pilt;

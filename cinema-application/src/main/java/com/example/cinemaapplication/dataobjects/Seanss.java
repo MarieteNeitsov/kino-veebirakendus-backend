@@ -13,6 +13,7 @@ public class Seanss {
     private long id;
     private LocalDate kuupäev;
     private LocalTime algusAeg;
+    private String keel;
     @ManyToOne
     private Film film;
     @ManyToOne
