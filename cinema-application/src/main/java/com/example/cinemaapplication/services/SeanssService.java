@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,10 +20,15 @@ public class SeanssService {
 
 
     public List<Seanss> kõikSeansid() {
-        return repositoorium.findAll();
+        List<Seanss> seansid = repositoorium.findAll();
+        seansid.sort(Comparator.comparing(Seanss::getKuupäev).thenComparing(Seanss::getAlgusAeg));
+        return seansid;
     }
 
 
+    public void lisaSeanss(Seanss seanss){
+        repositoorium.save(seanss);
+    }
     public List<Seanss> kõikSoovitused(Long kasutajaId) {
         return new ArrayList<>();
 

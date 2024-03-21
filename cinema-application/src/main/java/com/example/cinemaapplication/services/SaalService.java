@@ -28,4 +28,7 @@ public class SaalService {
         }
 
     }
+    public void lisaSaal(Saal saal){
+        repositoorium.save(saal);
+    }
 }

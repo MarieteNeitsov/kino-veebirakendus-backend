@@ -48,5 +48,20 @@ public class Istekoht {
     }
 
 
+    public long getId() {
+        return id;
+    }
+
+    public int getKohaNumber() {
+        return kohaNumber;
+    }
+
+    public boolean isVaba() {
+        return vaba;
+    }
+
+    public Saal getSaal() {
+        return saal;
+    }
 }
 

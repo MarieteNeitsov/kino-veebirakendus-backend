@@ -12,20 +12,21 @@ public class Film {
 
     private String pealkiri;
 
-    private String kestus;
+    private double kestus;
 
     private String zanr;
     private String vanusepiirang;
 
-    @Transient
+
     private String pilt;
 
-    public Film(String pealkiri, String kestus, String zanr, String pilt) {
+    public Film(String pealkiri, double kestus, String zanr, String vanusepiirang,String pilt) {
         this.id = id;
         this.pealkiri = pealkiri;
         this.kestus = kestus;
         this.zanr = zanr;
         this.pilt = pilt;
+        this.vanusepiirang = vanusepiirang;
     }
 
     public Film() {
@@ -40,10 +41,13 @@ public class Film {
         return pealkiri;
     }
 
-    public String getKestus() {
+    public double getKestus() {
         return kestus;
     }
 
+    public String getVanusepiirang() {
+        return vanusepiirang;
+    }
 
     public String getZanr() {
         return zanr;
@@ -58,9 +62,7 @@ public class Film {
         this.pealkiri = pealkiri;
     }
 
-    public void setKestus(String kestus) {
-        this.kestus = kestus;
-    }
+
 
     public void setZanr(String zanr) {
         this.zanr = zanr;

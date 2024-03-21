@@ -29,11 +29,11 @@ public class Saal {
 
     }
 
-    private List<Istekoht> soovitaKohad(int kohtadeArv){
+   /* private List<Istekoht> soovitaKohad(int kohtadeArv){
 
-    }
+    }*/
 
-    private void lisaIstekohad(){
+    public void lisaIstekohad(){
         int[] hõivatudKohad = genereeriHõivatudKohad();
         int reaCounter =1;
 

@@ -59,5 +59,13 @@ public class Kasutaja {
     public void setParool(String parool) {
         this.parool = parool;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public List<Film> getVaadatudFilmid() {
+        return vaadatudFilmid;
+    }
 }
 
