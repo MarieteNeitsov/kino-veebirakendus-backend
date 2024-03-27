@@ -17,7 +17,7 @@ public class SaalService {
         this.repositoorium = repositoorium;
     }
 
-    public List<Istekoht> kõikIstekohad(Long saaliId) {
+    public List<Istekoht> leiaSaal(Long saaliId) {
         Optional<Saal> optionalSaal = repositoorium.findById(saaliId);
 
         if (optionalSaal.isPresent()) {
@@ -30,5 +30,9 @@ public class SaalService {
     }
     public void lisaSaal(Saal saal){
         repositoorium.save(saal);
+    }
+
+    public void genereeriKohad(int arv,long saalId){
+
     }
 }

@@ -2,9 +2,8 @@ package com.example.cinemaapplication.dataobjects;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
 @Entity
 @Table(name="Saalid")
 public class Saal {
@@ -20,7 +19,6 @@ public class Saal {
     @OneToMany(mappedBy = "saal", cascade = CascadeType.ALL)
     private final List<Istekoht> istekohad = new ArrayList<>();
     public Saal( String nimi) {
-        this.id = id;
         this.nimi = nimi;
 
     }
@@ -34,22 +32,26 @@ public class Saal {
     }*/
 
     public void lisaIstekohad(){
-        int[] hõivatudKohad = genereeriHõivatudKohad();
+        Set<Integer> hõivatudKohad = genereeriHõivatudKohad();
         int reaCounter =1;
+
 
         for (int i = 1; i <= istekohtadeArv; i++) {
             boolean vaba = true;
-            if (Arrays.asList(hõivatudKohad).contains(i)) vaba = false;
+            if (hõivatudKohad.contains(i)) vaba = false;
             istekohad.add(new Istekoht(reaCounter,i,vaba,this));
 
-            if(i % 15 == 0) reaCounter++;
+
+            if(i % 15 == 0) {
+                reaCounter++;
+            }
         }
     }
-    private int[] genereeriHõivatudKohad(){
+    private Set<Integer> genereeriHõivatudKohad(){
 
         int protsentHõivatud = 30;
-        int arvHõivatud = (int) Math.round(istekohtadeArv * (protsentHõivatud / 100));
-        int[] hõivatudKohad = new int[arvHõivatud];
+        int arvHõivatud = (int) Math.round(istekohtadeArv * ((double) protsentHõivatud / 100));
+        Set<Integer> hõivatudKohad = new HashSet<>();
 
         for (int i = 0; i < arvHõivatud; i++) {
             int hõivatudKohaNr;
@@ -59,8 +61,8 @@ public class Saal {
 
                 if(!Arrays.asList(hõivatudKohad).contains(hõivatudKohaNr)) break;
             }
+            hõivatudKohad.add(hõivatudKohaNr);
 
-            hõivatudKohad[i] =hõivatudKohaNr;
         }
         return hõivatudKohad;
     }

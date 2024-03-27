@@ -19,18 +19,6 @@ public class Seanss {
         return id;
     }
 
-    public String getKeel() {
-        return keel;
-    }
-
-    public Film getFilm() {
-        return film;
-    }
-
-    public Saal getSaal() {
-        return saal;
-    }
-
     private String keel;
     @ManyToOne(fetch = FetchType.EAGER)
     private Film film;
@@ -56,6 +44,17 @@ public class Seanss {
 
     public LocalTime getAlgusAeg() {
         return algusAeg;
+    }
+    public String getKeel() {
+        return keel;
+    }
+
+    public Film getFilm() {
+        return film;
+    }
+
+    public Saal getSaal() {
+        return saal;
     }
 }
 

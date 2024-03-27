@@ -1,5 +1,6 @@
 package com.example.cinemaapplication.dataobjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -13,12 +14,14 @@ public class Istekoht {
     private int kohaNumber;
     private boolean vaba;
     @ManyToOne
+    @JsonIgnore
     private Saal saal;
 
     public Istekoht(int rida, int kohaNumber, boolean vaba, Saal saal) {
         this.rida = rida;
         this.kohaNumber = kohaNumber;
         this.vaba = vaba;
+        this.saal= saal;
 
     }
 
