@@ -11,17 +11,20 @@ public class Istekoht {
     @GeneratedValue
     private long id;
     private int rida;
+    private int veerg;
     private int kohaNumber;
     private boolean vaba;
     @ManyToOne
     @JsonIgnore
     private Saal saal;
+    private int väärtus;
 
-    public Istekoht(int rida, int kohaNumber, boolean vaba, Saal saal) {
+    public Istekoht(int rida, int veerg,int kohaNumber, boolean vaba, Saal saal) {
         this.rida = rida;
         this.kohaNumber = kohaNumber;
         this.vaba = vaba;
         this.saal= saal;
+        this.veerg = veerg;
 
     }
 
@@ -59,12 +62,23 @@ public class Istekoht {
         return kohaNumber;
     }
 
-    public boolean isVaba() {
+    public boolean getVaba() {
         return vaba;
     }
 
     public Saal getSaal() {
         return saal;
+    }
+
+    public int getVeerg() {
+        return veerg;
+    }
+
+    public void setVäärtus(int i) {
+        this.väärtus = i;
+    }
+    public int getVäärtus() {
+        return väärtus;
     }
 }
 

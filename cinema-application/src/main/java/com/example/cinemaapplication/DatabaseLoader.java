@@ -1,6 +1,7 @@
 package com.example.cinemaapplication;
 
 import com.example.cinemaapplication.dataobjects.Film;
+import com.example.cinemaapplication.dataobjects.Istekoht;
 import com.example.cinemaapplication.dataobjects.Saal;
 import com.example.cinemaapplication.dataobjects.Seanss;
 import com.example.cinemaapplication.services.FilmService;
@@ -9,10 +10,10 @@ import com.example.cinemaapplication.services.SeanssService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.sql.ClientInfoStatus;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class DatabaseLoader implements CommandLineRunner {
@@ -48,7 +49,20 @@ public class DatabaseLoader implements CommandLineRunner {
         saalService.lisaSaal(saal);
         seanssService.lisaSeanss(new Seanss(LocalDate.of(2024, 4, 1),LocalTime.of(19, 30),filmid.get(1),saal,"inglise"));
         seanssService.lisaSeanss(new Seanss(LocalDate.of(2024, 4, 2),LocalTime.of(17, 30),filmid.get(2),saal,"inglise"));
+        
+
+        List<Integer> soovit = saalService.soovitaKohad(4, 1);
+        for (int nr : soovit) {
+            System.out.println(nr);
+        }
+
+
+
+
     }
+
 }
+
+
 
 

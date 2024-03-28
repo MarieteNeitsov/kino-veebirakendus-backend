@@ -5,6 +5,7 @@ import com.example.cinemaapplication.services.SaalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,5 +21,10 @@ public class SaalController {
     @GetMapping("/saal/{id}")
     List<Istekoht> leiaSaal(@PathVariable Long id) {
         return service.leiaSaal(id);
+    }
+
+    @GetMapping("/saal/{id}/soovita/{arv}")
+    List<Integer> soovitaKohad(@PathVariable Long id, @PathVariable int arv) {
+        return service.soovitaKohad(arv,id);
     }
 }

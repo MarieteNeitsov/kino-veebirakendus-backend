@@ -34,9 +34,6 @@ public class SeanssController {
         return seansid;
     }
 
-   /* @GetMapping("/soovitused")
-    List<Seanss> kõikSoovitused() {
-        return service.kõikSoovitused();
-    }*/
+
 
 }

@@ -16,7 +16,7 @@ public class Saal {
     private final int istekohtadeArv = 135;
     @Transient
     private final int ridadeArv = 9;
-    @OneToMany(mappedBy = "saal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "saal", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private final List<Istekoht> istekohad = new ArrayList<>();
     public Saal( String nimi) {
         this.nimi = nimi;
@@ -34,16 +34,22 @@ public class Saal {
     public void lisaIstekohad(){
         Set<Integer> hõivatudKohad = genereeriHõivatudKohad();
         int reaCounter =1;
+        int veergCounter = 1;
 
 
         for (int i = 1; i <= istekohtadeArv; i++) {
             boolean vaba = true;
             if (hõivatudKohad.contains(i)) vaba = false;
-            istekohad.add(new Istekoht(reaCounter,i,vaba,this));
+            istekohad.add(new Istekoht(reaCounter,veergCounter,i,vaba,this));
 
 
             if(i % 15 == 0) {
                 reaCounter++;
+            }
+            if(veergCounter == 15) {
+                veergCounter = 1;
+            } else {
+                veergCounter++;
             }
         }
     }
@@ -66,6 +72,34 @@ public class Saal {
         }
         return hõivatudKohad;
     }
+
+    public List<List<Istekoht>> saaliStrukruur(){
+        List<List<Istekoht>> saal = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            //List<Istekoht> row = new ArrayList<>(Collections.nCopies(15, null));
+            //saal.add(row);
+            saal.add(new ArrayList<>());
+        }
+        for (Istekoht istekoht : istekohad) {
+            saal.get(istekoht.getRida()-1).add(istekoht);
+            //saal.get(istekoht.getRida()).set(istekoht.getVeerg(),istekoht);
+        }
+        väärtusedKohtadele(saal);
+        return saal;
+    }
+    private void väärtusedKohtadele( List<List<Istekoht>> saal){
+        int[] kohaPunktid = {1,2,3,4,5,6,7,8,7,6,5,4,3,2,1};
+        int[] ridaPunktid = {2,4,6,8,10,8,6,4,2};
+
+        for (int i = 0; i < ridaPunktid.length; i++) {
+            for (int j = 0; j < kohaPunktid.length; j++) {
+                Istekoht koht = saal.get(i).get(j);
+                koht.setVäärtus(kohaPunktid[j]+ridaPunktid[i]);
+            }
+        }
+    }
+
+
 
     public int getId() {
         return id;
