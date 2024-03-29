@@ -22,7 +22,7 @@ public class Seanss {
     private String keel;
     @ManyToOne(fetch = FetchType.EAGER)
     private Film film;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Saal saal;
 
     public Seanss(LocalDate kuupäev, LocalTime algusAeg, Film film, Saal saal, String keel) {

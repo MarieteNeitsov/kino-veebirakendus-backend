@@ -35,9 +35,9 @@ public class DatabaseLoader implements CommandLineRunner {
         filmid.add(new Film("Barbie",1.54,"Seiklus","PG-13","http://localhost:8080/barbie.jpg") );
         filmid.add(new Film("Saltburn",2.11,"Draama","R","http://localhost:8080/saltburn.jpg") );
         filmid.add(new Film("Oppenheimer",3.0,"Biograafia","R","http://localhost:8080/oppenheimer.jpg") );
-        filmid.add(new Film("Anyone But You",1.43,"Komöödia","R", "static/anyone-but-you.jpg"));
-        filmid.add(new Film("Despicable me 3",1.29,"Animatsioon","PG", "static/despicable-me-3.jpg") );
-        filmid.add(new Film("Gone Girl",2.29,"Draama","R", "static/gone-girl.jpg"));
+        filmid.add(new Film("Anyone But You",1.43,"Komöödia","R", "http://localhost:8080/anyone-but-you.jpg"));
+        filmid.add(new Film("Despicable me 3",1.29,"Animatsioon","PG", "http://localhost:8080/despicable-me-3.jpg") );
+        filmid.add(new Film("Gone Girl",2.29,"Draama","R", "http://localhost:8080/gone-girl.jpg"));
 
         for (Film film : filmid) {
             filmService.lisaFilm(film);
@@ -47,14 +47,16 @@ public class DatabaseLoader implements CommandLineRunner {
         saal.lisaIstekohad();
         System.out.println(saal.getIstekohad().size());
         saalService.lisaSaal(saal);
-        seanssService.lisaSeanss(new Seanss(LocalDate.of(2024, 4, 1),LocalTime.of(19, 30),filmid.get(1),saal,"inglise"));
+        seanssService.lisaSeanss(new Seanss(LocalDate.of(2024, 4, 1),LocalTime.of(17, 15),filmid.get(1),saal,"inglise"));
         seanssService.lisaSeanss(new Seanss(LocalDate.of(2024, 4, 2),LocalTime.of(17, 30),filmid.get(2),saal,"inglise"));
-        
+        seanssService.lisaSeanss(new Seanss(LocalDate.of(2024, 4, 3),LocalTime.of(17, 45),filmid.get(5),saal,"inglise"));
 
         List<Integer> soovit = saalService.soovitaKohad(4, 1);
         for (int nr : soovit) {
             System.out.println(nr);
         }
+
+
 
 
 

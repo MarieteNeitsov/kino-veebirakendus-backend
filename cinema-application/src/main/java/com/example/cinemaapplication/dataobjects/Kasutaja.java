@@ -17,21 +17,22 @@ public class Kasutaja {
     @GeneratedValue
     private long id;
 
-
-    private String kasutajanimi;
+    @Column(unique = true)
+    private String email;
 
     private String parool;
+
     @ManyToMany
     @JoinTable(
-            name = "kasutaja_filmid",
+            name = "kasutaja_seansid",
             joinColumns = @JoinColumn(name = "kasutaja_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
+            inverseJoinColumns = @JoinColumn(name = "seanss_id")
     )
-    private List<Film> vaadatudFilmid = new ArrayList<>();
+    private List<Seanss> vaadatudSeansid = new ArrayList<>();
 
-    public Kasutaja(String kasutajanimi, String parool) {
-        this.id = id;
-        this.kasutajanimi = kasutajanimi;
+    public Kasutaja(String email, String parool) {
+
+        this.email = email;
         this.parool = parool;
     }
 
@@ -39,22 +40,22 @@ public class Kasutaja {
 
     }
 
-    public void lisaVaadatudFilm(Film film) {
-        vaadatudFilmid.add(film);
+    public List<Seanss> getVaadatudSeansid() {
+        return vaadatudSeansid;
+    }
+    public void lisaVaadatudSeans(Seanss seanss){
+        vaadatudSeansid.add(seanss);
     }
 
-
-    public String getKasutajanimi() {
-        return kasutajanimi;
+    public String getEmail() {
+        return email;
     }
 
     public String getParool() {
         return parool;
     }
 
-    public void setKasutajanimi(String kasutajanimi) {
-        this.kasutajanimi = kasutajanimi;
-    }
+
 
     public void setParool(String parool) {
         this.parool = parool;
@@ -64,8 +65,9 @@ public class Kasutaja {
         return id;
     }
 
-    public List<Film> getVaadatudFilmid() {
-        return vaadatudFilmid;
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 
