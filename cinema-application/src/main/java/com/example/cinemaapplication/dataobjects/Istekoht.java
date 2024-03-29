@@ -3,7 +3,9 @@ package com.example.cinemaapplication.dataobjects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-
+/**
+ * Kujutab istekohta kinorakenduses.
+ */
 @Entity
 @Table(name="Istekohad")
 public class Istekoht {
@@ -17,8 +19,16 @@ public class Istekoht {
     @ManyToOne
     @JsonIgnore
     private Saal saal;
-    private int väärtus;
-
+    private int väärtus; //istekoha skoor, mis nätab kui hea koht vaatajale on
+    /**
+     * Koostab uue Istekoht objekti antud parameetritega.
+     *
+     * @param rida istekoha rida
+     * @param veerg istekoha veerg
+     * @param kohaNumber istekoha number
+     * @param vaba kas istekoht on vaba
+     * @param saal saal, kus istekoht asub
+     */
     public Istekoht(int rida, int veerg,int kohaNumber, boolean vaba, Saal saal) {
         this.rida = rida;
         this.kohaNumber = kohaNumber;
@@ -52,7 +62,6 @@ public class Istekoht {
     public void setKoht(int kohaNumber) {
         this.kohaNumber = kohaNumber;
     }
-
 
     public long getId() {
         return id;

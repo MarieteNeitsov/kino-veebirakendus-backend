@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+/**
+ * Kujutab seanssi kinorakenduses.
+ */
 @Entity
 @Table(name="Seansid")
 public class Seanss {
@@ -14,17 +16,20 @@ public class Seanss {
     private long id;
     private LocalDate kuupäev;
     private LocalTime algusAeg;
-
-    public long getId() {
-        return id;
-    }
-
     private String keel;
     @ManyToOne(fetch = FetchType.EAGER)
     private Film film;
     @ManyToOne(fetch = FetchType.EAGER)
     private Saal saal;
-
+    /**
+     * Koostab uue Seanss objekti antud parameetritega.
+     *
+     * @param kuupäev seansi kuupäev
+     * @param algusAeg seansi algusaeg
+     * @param film seansi film
+     * @param saal seansi saal
+     * @param keel seansi keel
+     */
     public Seanss(LocalDate kuupäev, LocalTime algusAeg, Film film, Saal saal, String keel) {
         this.kuupäev = kuupäev;
         this.algusAeg = algusAeg;
@@ -36,6 +41,9 @@ public class Seanss {
 
     public Seanss() {
 
+    }
+    public long getId() {
+        return id;
     }
 
     public LocalDate getKuupäev() {

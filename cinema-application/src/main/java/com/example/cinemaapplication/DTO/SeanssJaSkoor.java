@@ -3,7 +3,9 @@ package com.example.cinemaapplication.DTO;
 import com.example.cinemaapplication.dataobjects.Seanss;
 
 import java.util.List;
-
+/**
+ * Kujutab seansside ja sobimise tõenäosuste andmeedastusobjekti kinorakenduses.
+ */
 public class SeanssJaSkoor{
     private List<Seanss> seansid;
     private List<Double> skoorid;

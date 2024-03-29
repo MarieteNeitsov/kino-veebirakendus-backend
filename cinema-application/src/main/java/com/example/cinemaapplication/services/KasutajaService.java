@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static javax.crypto.Cipher.SECRET_KEY;
-
+/**
+ * Teenuseklass kasutajate haldamiseks kinorakenduses.
+ */
 @Service
 public class KasutajaService {
 
@@ -30,7 +32,13 @@ public class KasutajaService {
         this.jwtUtil = new JwtUtil();
     }
 
-
+    /**
+     * Lisab uue kasutaja andmebaasi.
+     *
+     * @param kasutajaDTO lisatav kasutaja DTO
+     * @return map, mis sisaldab JWT-d ja kasutaja ID-d
+     * @throws IllegalArgumentException kui e-posti aadress on juba kasutusel
+     */
     public Map<String, Object> lisaKasutaja(KasutajaDTO kasutajaDTO){
         if (repositoorium.findByEmail(kasutajaDTO.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email on kasutusel");
@@ -38,23 +46,33 @@ public class KasutajaService {
         String hashedPassword = BCrypt.hashpw(kasutajaDTO.getParool(), BCrypt.gensalt());
         Kasutaja kasutaja = new Kasutaja(kasutajaDTO.getEmail(), hashedPassword);
 
-        Kasutaja savedKasutaja = repositoorium.save(kasutaja);
+        Kasutaja registreeritudKasutaja = repositoorium.save(kasutaja);
 
         String jwt = jwtUtil.generateToken(kasutaja.getEmail());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("jwt", jwt);
-        response.put("userId", savedKasutaja.getId());
+        Map<String, Object> vastus = new HashMap<>();
+        vastus.put("jwt", jwt);
+        vastus.put("userId", registreeritudKasutaja.getId());
 
-        return response;
+        return vastus;
     }
-
+    /**
+     * Leiab kasutaja tema ID järgi.
+     *
+     * @param kasutajaId kasutaja ID
+     * @return leitud kasutaja
+     * @throws RuntimeException kui kasutajat ei leita
+     */
 
     public Kasutaja leiaKasutaja(Long kasutajaId){
 
         return repositoorium.findById(kasutajaId).orElseThrow(() -> new RuntimeException("Kasutajat id-ga " + kasutajaId + " ei leitud"));
     }
-
+    /**
+     * Uuendab kasutajat andmebaasis.
+     *
+     * @param kasutaja uuendatav kasutaja
+     */
     public void uuendaKasutaja(Kasutaja kasutaja) {
         repositoorium.save(kasutaja);
     }

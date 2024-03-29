@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
-
+/**
+ * Klass JSON Web Tokenite (JWT) genereerimiseks.
+ */
 public class JwtUtil {
     private final String SECRET_KEY = "lksdecf8wenfma021k12345678901234";
 

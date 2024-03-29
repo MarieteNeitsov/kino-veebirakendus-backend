@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+/**
 
+ See kontroller haldab kõiki sessioonidega seotud päringuid.
+ */
 @RestController
 public class SeanssController {
 
@@ -22,11 +25,25 @@ public class SeanssController {
     SeanssController(SeanssService service) {
         this.service = service;
     }
+    /**
 
+     Tagastab kõik sessioonid.
+     @return kõikide sessioonide loend
+     */
     @GetMapping("/seansid")
     List<Seanss> kõikSeansid() {
         return service.kõikSeansid();
     }
+
+    /**
+
+    Tagastab filtreeritud sessioonid antud parameetrite põhjal.
+    @param vanusepiirang vanusepiirang, mille järgi filtreerida
+    @param algusaeg algusaeg, mille järgi filtreerida
+    @param zanr žanr, mille järgi filtreerida
+    @param keel keel, mille järgi filtreerida
+    @return filtreeritud sessioonide loend
+    */
 
     @GetMapping("/seansid/filter")
     List<Seanss> filtreeriSeansid(@RequestParam(required = false) String vanusepiirang,
@@ -48,7 +65,12 @@ public class SeanssController {
         List<Seanss> seansid = service.filtreeriSeansse(vanusepiirang, algusaeg, zanr, keel);
         return seansid;
     }
+    /**
 
+     Tagastab kõik sessioonisoovitused antud kasutaja ID põhjal.
+     @param kasutajaId kasutaja ID, kellele soovitusi saada
+     @return SeanssJaSkoor objekt, mis sisaldab soovitatud sessioone ja nende sobimise tõenäosust
+     */
     @GetMapping("/soovitused")
     SeanssJaSkoor kõikSoovitused(@RequestParam Long kasutajaId) {
         Map<Seanss, Double> soovitused=service.soovitaSeansse(kasutajaId);

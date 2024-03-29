@@ -3,7 +3,9 @@ package com.example.cinemaapplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+/**
+ * Konfiguratsiooniklass CORS-i jaoks. AI tööriistaga genereeritud
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * Teenuseklass seansside haldamiseks kinorakenduses.
+ */
 @Service
 public class SeanssService {
     private static final Logger logger = LoggerFactory.getLogger(SeanssService.class);
@@ -22,14 +24,22 @@ public class SeanssService {
         this.repositoorium = repositoorium;
     }
 
-
+    /**
+     * Tagastab kõik seansid kuupäeva ja algusaja järgi sorteeritult.
+     *
+     * @return kõikide seansside loetelu
+     */
     public List<Seanss> kõikSeansid() {
         List<Seanss> seansid = repositoorium.findAll();
         seansid.sort(Comparator.comparing(Seanss::getKuupäev).thenComparing(Seanss::getAlgusAeg));
         return seansid;
     }
 
-
+    /**
+     * Lisab uue seansi andmebaasi.
+     *
+     * @param seanss lisatav seanss
+     */
     public void lisaSeanss(Seanss seanss){
         repositoorium.save(seanss);
     }
@@ -37,11 +47,29 @@ public class SeanssService {
         return new ArrayList<>();
 
     }
+
+    /**
+     * Leiab seansi selle id järgi.
+     *
+     * @param id seansi id
+     * @return leitud seanss
+     * @throws RuntimeException kui seanssi ei leita
+     */
     public Seanss leiaSeanss(Long id){
         return repositoorium.findById(id).orElseThrow(() -> new RuntimeException("Seanssi id-ga " + id + " ei leitud"));
     }
 
-
+    /**
+     * Filtreerib seansid vanusepiirangu, algusaja, zanri ja keele järgi.
+     * kasutab selleks Specification klassi ja kui mõni parameeter on null, siis ei filtreeri selle järgi.
+     *
+     *
+     * @param vanusepiirang vanusepiirang
+     * @param algusaeg algusaeg (kasutatakse parameetina tundi ja leitakse seansid, mis algavad sellel tunnil)
+     * @param zanr zanr
+     * @param keel keel
+     * @return filtreeritud seansside loetelu
+     */
     public List<Seanss> filtreeriSeansse(String vanusepiirang, String algusaeg, String zanr, String keel) {
         return repositoorium.findAll(Specification
                 .where(vanusepiirangudSpec(vanusepiirang))
@@ -73,9 +101,14 @@ public class SeanssService {
     private Specification<Seanss> keeledSpec(String keel) {
         return (root, query, cb) -> keel == null ? null : cb.equal(root.get("keel"), keel);
     }
-    
-   
-    
+
+
+    /**
+     * Soovitab seansse kasutaja id järgi.
+     *
+     * @param kasutajaId kasutaja id
+     * @return soovitatud seanssid ja nende sobimise tõenäosused
+     */
     public  Map<Seanss, Double> soovitaSeansse(Long kasutajaId){
         Kasutaja kasutaja= kasutajaService.leiaKasutaja(kasutajaId);
         List<Seanss> kasutajaAjalugu = kasutaja.getVaadatudSeansid();
@@ -86,22 +119,25 @@ public class SeanssService {
 
         Map<String, Double> algusajaKaalud = leiaAlgusajaKaalud(kasutajaAjalugu, vaadatudSeanssideArv);
 
-        List<Seanss> sobivadSeansid = leiaSobivadSeansid(kasutajaAjalugu, zanriKaalud, algusajaKaalud);
+        List<Seanss> sobivadSeansid = leiaSobivadSeansid(kasutajaAjalugu, zanriKaalud);
 
         Map<Seanss, Double> soovitusKaalud = new HashMap<>();
 
         for (Seanss seanss: sobivadSeansid){
             double lisaProtsent = 0.0;
-            double algusajaKaal = algusajaKaalud.get(Integer.toString(seanss.getAlgusAeg().getHour()));
+            //double algusajaKaal = algusajaKaalud.get(Integer.toString(seanss.getAlgusAeg().getHour()));
             double zanriKaal = zanriKaalud.get(seanss.getFilm().getZanr());
-            if(algusajaKaal >= 0.5 && (!(zanriKaal==1.0))){
-                lisaProtsent=0.1;
+            String algusaeg = Integer.toString(seanss.getAlgusAeg().getHour());
+            if(algusajaKaalud.containsKey(algusaeg)){
+                if(algusajaKaalud.get(algusaeg) >= 0.5 && (!(zanriKaal==1.0))){
+                    lisaProtsent=0.1;
+                }
             }
             soovitusKaalud.put(seanss, zanriKaal+lisaProtsent);
         }
 
         //AI tööriistaga genereeritud sorteerimse kood
-        Map<Seanss, Double> sortedSoovitusKaalud = soovitusKaalud.entrySet().stream()
+        Map<Seanss, Double> sorteeritudSoovitusKaalud = soovitusKaalud.entrySet().stream()
                 .sorted(Map.Entry.<Seanss, Double>comparingByValue().reversed())
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -110,17 +146,28 @@ public class SeanssService {
                         LinkedHashMap::new
                 ));
 
-        return soovitusKaalud;
+        return sorteeritudSoovitusKaalud;
     }
-
-    private List<Seanss> leiaSobivadSeansid(List<Seanss> kasutajaAjalugu, Map<String, Double> zanriKaalud, Map<String, Double> algusajaKaalud) {
+    /**
+     * Leiab kõik seansid, mida kasutaja pole külastanud ja mis vastavad tema vaadatud filmide zanritele.
+     *
+     * @param kasutajaAjalugu kasutaja vaadatud seansid
+     * @return sobivad seansid vastavalt ajaloole
+     */
+    private List<Seanss> leiaSobivadSeansid(List<Seanss> kasutajaAjalugu, Map<String, Double> zanriKaalud) {
         List<Seanss> sobivadSeansid = kõikSeansid().stream()
                 .filter(seanss -> !kasutajaAjalugu.contains(seanss))
                 .filter(seanss -> zanriKaalud.containsKey(seanss.getFilm().getZanr()))
-                .filter(seanss -> algusajaKaalud.containsKey(Integer.toString(seanss.getAlgusAeg().getHour())))
                 .collect(Collectors.toList());
         return sobivadSeansid;
     }
+    /**
+     * Leiab protsendi seansi algusasja esinemise sageduse põhjal kasutaja ajaloos
+     *
+     * @param kasutajaAjalugu kasutaja vaadatud seansid
+     * @param vaadatudSeanssideArv vaadatud seansside arv
+     * @return alugusajad ja nende protsenid ajaloos
+     */
 
     private static Map<String, Double> leiaAlgusajaKaalud(List<Seanss> kasutajaAjalugu, int vaadatudSeanssideArv) {
         Map<String,Double> algusajaKaalud = new HashMap<>();
@@ -136,6 +183,14 @@ public class SeanssService {
         algusajaKaalud.replaceAll((k, v) -> v / vaadatudSeanssideArv);
         return algusajaKaalud;
     }
+
+    /**
+     * Leiab protsendi filmi zanri esinemise sageduse põhjal kasutaja ajaloos
+     *
+     * @param kasutajaAjalugu kasutaja vaadatud seansid
+     * @param vaadatudSeanssideArv vaadatud seansside arv
+     * @return zanrid ja nende protsenid ajaloos
+     */
 
     private static Map<String, Double> leiaZanriKaalud(List<Seanss> kasutajaAjalugu, int vaadatudSeanssideArv) {
         Map<String, Double> zanriKaalud = new HashMap<>();

@@ -2,7 +2,9 @@ package com.example.cinemaapplication.dataobjects;
 
 import jakarta.persistence.*;
 
-
+/**
+ * Kujutab filmi kinorakenduses.
+ */
 @Entity
 @Table(name="Filmid")
 public class Film {
@@ -17,8 +19,17 @@ public class Film {
     private String zanr;
     private String vanusepiirang;
 
-
     private String pilt;
+
+    /**
+     * Koostab uue Film objekti antud parameetritega.
+     *
+     * @param pealkiri filmi pealkiri
+     * @param kestus filmi kestus
+     * @param zanr filmi žanr
+     * @param vanusepiirang filmi vanusepiirang
+     * @param pilt filmi pilt (URL)
+     */
 
     public Film(String pealkiri, double kestus, String zanr, String vanusepiirang,String pilt) {
         this.id = id;
@@ -44,7 +55,6 @@ public class Film {
     public double getKestus() {
         return kestus;
     }
-
     public String getVanusepiirang() {
         return vanusepiirang;
     }
@@ -53,7 +63,6 @@ public class Film {
         return zanr;
     }
 
-
     public String getPilt() {
         return pilt;
     }
@@ -61,8 +70,6 @@ public class Film {
     public void setPealkiri(String pealkiri) {
         this.pealkiri = pealkiri;
     }
-
-
 
     public void setZanr(String zanr) {
         this.zanr = zanr;

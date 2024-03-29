@@ -8,7 +8,9 @@ import java.util.List;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Kujutab kasutajat kinorakenduses.
+ */
 @Entity
 @Table(name="Kasutajad")
 public class Kasutaja {
@@ -29,7 +31,12 @@ public class Kasutaja {
             inverseJoinColumns = @JoinColumn(name = "seanss_id")
     )
     private List<Seanss> vaadatudSeansid = new ArrayList<>();
-
+    /**
+     * Koostab uue Kasutaja objekti antud parameetritega.
+     *
+     * @param email kasutaja e-post
+     * @param parool kasutaja parool
+     */
     public Kasutaja(String email, String parool) {
 
         this.email = email;

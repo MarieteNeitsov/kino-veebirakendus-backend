@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Map;
-
+/**
+ * KasutajaController tegelb kasutajatega seotud päringutega
+ */
 @RestController
 public class KasutajaController {
 
@@ -27,7 +29,12 @@ public class KasutajaController {
         this.service = service;
         this.seanssService = seanssService;
     }
+    /**
 
+     Lisab uue kasutaja.
+     @param kasutajaDTO lisatava kasutaja DTO, kus on email ja parool
+     @return vastus operatsiooni tulemusega, õnnestumisel ka jwt ja kasutaja id
+     */
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> lisaKasutaja(@RequestBody KasutajaDTO kasutajaDTO) {
         try {
@@ -37,6 +44,13 @@ public class KasutajaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("error", e.getMessage()));
         }
     }
+    /**
+
+     Salvestab kasutajale sessiooni tema ajalukku.
+     @param seanssId sessiooni ID, mida salvestada
+     @param kasutajaId kasutaja ID, kellele sessiooni salvestada
+     @return vastus operatsiooni tulemusega
+     */
 
     @PostMapping("/salvestaSeanss/{seanssId}/{kasutajaId}")
     public ResponseEntity<Void> salvestaSeanss(@PathVariable Long seanssId, @PathVariable Long kasutajaId) {
@@ -50,5 +64,6 @@ public class KasutajaController {
         }
         return ResponseEntity.ok().build();
     }
+
 
 }

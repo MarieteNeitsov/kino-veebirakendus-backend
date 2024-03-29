@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * Teenuseklass saalide haldamiseks kinorakenduses.
+ */
 @Service
 public class SaalService {
     private final SaalRepositoorium repositoorium;
@@ -17,7 +19,13 @@ public class SaalService {
     public SaalService(SaalRepositoorium repositoorium){
         this.repositoorium = repositoorium;
     }
-
+    /**
+     * Leiab saali selle ID järgi.
+     *
+     * @param saaliId saali ID
+     * @return saalis olevate istekohtade loetelu
+     * @throws RuntimeException kui saali ei leita
+     */
     public List<Istekoht> leiaSaal(Long saaliId) {
         Optional<Saal> optionalSaal = repositoorium.findById(saaliId);
 
@@ -29,9 +37,22 @@ public class SaalService {
         }
 
     }
+    /**
+     * Lisab uue saali hoidlasse.
+     *
+     * @param saal lisatav saal
+     */
     public void lisaSaal(Saal saal){
         repositoorium.save(saal);
     }
+
+    /**
+     * Leiab saali objekti selle ID järgi.
+     *
+     * @param saaliId saali ID
+     * @return leitud saali objekt
+     * @throws RuntimeException kui saali ei leita
+     */
     public Saal otsiSaaliObjekt(Long saaliId){
         Optional<Saal> optionalSaal = repositoorium.findById(saaliId);
         if(optionalSaal.isPresent()){
@@ -43,13 +64,21 @@ public class SaalService {
 
    private int MaxReaSumma = 0;
 
+    /**
+     * Soovitab antud arvu kohti saalis
+     *
+     *
+     * @param arv kohtade arv
+     * @param saalId saali ID
+     * @return soovitatud kohanumbrite loetelu
+     */
     public List<Integer> soovitaKohad(int arv,long saalId){
         Saal saal = otsiSaaliObjekt(saalId);
         List<List<Istekoht>> saaliRead = saal.saaliStrukruur();
 
         List<Integer> leitudKohad = new ArrayList<>();
         int saaliSuurimSumma = 0;
-        for (List<Istekoht> rida : saaliRead) {
+        for (List<Istekoht> rida : saaliRead) { // igas reas leiame järjestikused kohad, mille väärtuste summa on kõige suurem
             List<Istekoht> kohadReas = leiaJärjestikusedKohad(arv,rida);
             if (kohadReas.isEmpty()) {
                 continue;
@@ -66,6 +95,13 @@ public class SaalService {
         return leitudKohad;
     }
 
+    /**
+     * Leiab antud arvu järjestikuseid kohti reas, mis on vabad ja, mis on selles reas parimad
+     *
+     * @param rida rida, kust vabu kohti otsitakse
+     * @param arv kohtade arv
+     * @return leitud vabad kohad reas, mille väärtuste summa on kõige suurem
+     */
     private List<Istekoht> leiaJärjestikusedKohad (int arv,List<Istekoht> rida) {
         List<Istekoht> leitudKohad = new ArrayList<>();
         List<Istekoht> vabadKohad = new ArrayList<>();
@@ -76,7 +112,7 @@ public class SaalService {
                 vabadKohad.add(istekoht);
             } else {
                 if (vabadKohad.size() >= arv) {
-                    Map<List<Istekoht>,Integer> leitud=leiaParimad(vabadKohad, arv);
+                    Map<List<Istekoht>,Integer> leitud=leiaParimad(vabadKohad, arv);//kui oleme leidnud piisavalt vabu kohti, siis leiame nende hulgast parimad
 
                     väärtusteSumma = leitud.values().iterator().next();
 
@@ -91,6 +127,13 @@ public class SaalService {
         }
         return leitudKohad;
     }
+    /**
+     * Leiab antud arvu kohti kõrvuti olevate vabade kohtade seast, annavad kokku suurima väärtuste summa.
+     *
+     * @param vabadKohad järjestikuste vabade kohtade loetelu reas
+     * @param arv kohtade arv
+     * @return leitud kohad ja nende väärtuste summa
+     */
 
     private Map<List<Istekoht>,Integer> leiaParimad(List<Istekoht> vabadKohad, int arv) {
         int maxVäärtusteSumma = 0;
